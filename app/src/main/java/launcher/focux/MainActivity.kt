@@ -51,6 +51,7 @@ import launcher.focux.activity.DrawerActivity
 import launcher.focux.activity.SettingActivity
 import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.userpreference.PreferenceRepo
+import launcher.focux.ui.component.widget.BottomDayWidget
 import launcher.focux.ui.screen.HiddenScreen
 import launcher.focux.ui.theme.ZenLauncherTheme
 import launcher.focux.ui.component.widget.BoxedClock
@@ -59,10 +60,12 @@ import launcher.focux.ui.component.widget.DateClockWidget
 import launcher.focux.ui.component.widget.DateWidget
 import launcher.focux.ui.component.widget.DayClockWidget
 import launcher.focux.ui.component.widget.DayWidget
+import launcher.focux.ui.component.widget.HourGrid
 import launcher.focux.ui.component.widget.MonthGrid
 import launcher.focux.ui.component.widget.YearGrid
+import launcher.focux.utils.BottomWidgetEnum
 import launcher.focux.utils.Packages
-import launcher.focux.utils.TopWidget.*
+import launcher.focux.utils.TopWidgetEnum.*
 import launcher.focux.utils.sort
 import launcher.focux.viewmodel.MainViewmodel
 
@@ -296,7 +299,23 @@ fun MainScreen(viewmodel: MainViewmodel) {
             modifier = Modifier
                 .padding(bottom = 40.dp)
         ) {
-            DayWidget()
+            when(setting!!.bottomWidget) {
+                BottomWidgetEnum.DEFAULT -> {
+
+                }
+                BottomWidgetEnum.DAYWIDGET -> {
+                    BottomDayWidget()
+                }
+                BottomWidgetEnum.HOURGRID -> {
+                    HourGrid()
+                }
+                BottomWidgetEnum.MONTHGRID -> {
+                    MonthGrid()
+                }
+                BottomWidgetEnum.YEARGRID -> {
+                    YearGrid()
+                }
+            }
         }
 
     }

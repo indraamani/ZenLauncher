@@ -3,16 +3,11 @@ package launcher.focux.utils
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class TopWidget {
+enum class BottomWidgetEnum {
     DEFAULT,
-    BOXED_CLOCK,
-    CLOCK,
-    DAY,
-    DATE,
-    DAYCLOCK,
-    DATECLOCK,
+
+    DAYWIDGET,
     HOURGRID,
     MONTHGRID,
     YEARGRID
-
 }
