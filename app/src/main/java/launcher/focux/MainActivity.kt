@@ -6,7 +6,6 @@ import android.content.pm.LauncherApps
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.UserHandle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -27,7 +26,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,16 +46,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import launcher.focux.activity.DrawerActivity
 import launcher.focux.activity.SettingActivity
 import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.userpreference.PreferenceRepo
 import launcher.focux.ui.screen.HiddenScreen
-import launcher.focux.ui.theme.FocuxTheme
+import launcher.focux.ui.theme.ZenLauncherTheme
 import launcher.focux.ui.component.widget.BoxedClock
 import launcher.focux.ui.component.widget.Clock
 import launcher.focux.ui.component.widget.DateClockWidget
@@ -159,7 +154,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            FocuxTheme {
+            ZenLauncherTheme {
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
                     MainScreen(viewModel)
                 else

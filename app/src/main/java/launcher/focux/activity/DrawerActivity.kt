@@ -3,7 +3,6 @@ package launcher.focux.activity
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,11 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,18 +29,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import launcher.focux.datastore.app.InstalledPackage
 import launcher.focux.ui.component.NestedLazyColumn
-import launcher.focux.ui.theme.FocuxTheme
+import launcher.focux.ui.theme.ZenLauncherTheme
 import launcher.focux.viewmodel.DrawerViewmodel
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import launcher.focux.ui.component.BottomSheet
 import launcher.focux.ui.component.popup.RenamePopup
 
@@ -55,7 +45,7 @@ class DrawerActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FocuxTheme {
+            ZenLauncherTheme {
                 DrawerScreen(this@DrawerActivity, viewModel)
             }
         }
