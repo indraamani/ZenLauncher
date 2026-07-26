@@ -1,9 +1,10 @@
 package launcher.focux.navigation.setting
 
 import kotlinx.serialization.Serializable
-
 @Serializable
 data object Setting
+@Serializable
+data object ZenModeSetting
 
 @Serializable
 data object ThemeScreen

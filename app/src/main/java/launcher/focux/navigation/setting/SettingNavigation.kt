@@ -9,6 +9,7 @@ import launcher.focux.ui.screen.BottomWidgetScreen
 import launcher.focux.ui.screen.FontScreen
 import launcher.focux.ui.screen.SettingScreen
 import launcher.focux.ui.screen.TopWidgetScreen
+import launcher.focux.ui.screen.ZenModeSettingScreen
 import launcher.focux.viewmodel.SettingViewmodel
 
 @Composable
@@ -16,10 +17,16 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Setting) {
+    NavHost(navController = navController, startDestination = ZenModeSetting) {
 
         composable<Setting> {
             SettingScreen(
+                viewmodel = viewmodel
+            )
+        }
+
+        composable<ZenModeSetting> {
+            ZenModeSettingScreen(
                 viewmodel = viewmodel,
                 openFontScreen = {
                     navController.navigate(FontScreen)
@@ -33,7 +40,6 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
             )
         }
         composable<FontScreen> {
-
             FontScreen(
                 viewmodel = viewmodel,
                 closeScreen = {
