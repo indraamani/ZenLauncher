@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import launcher.focux.ui.screen.BottomWidgetScreen
 import launcher.focux.ui.screen.FontScreen
 import launcher.focux.ui.screen.SettingScreen
 import launcher.focux.ui.screen.TopWidgetScreen
@@ -26,6 +27,9 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
                 openTopwidgetScreen = {
                     navController.navigate(TopWidgetScreen)
                 },
+                openBottomwidgetScreen = {
+                    navController.navigate(BottomWidgetScreen)
+                }
             )
         }
         composable<FontScreen> {
@@ -47,9 +51,16 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
             )
         }
 
+        composable<BottomWidgetScreen> {
+            BottomWidgetScreen(
+                viewmodel = viewmodel,
+                closeScreen = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
 //        composable<ThemeScreen> {
-//        }
-//        composable<BottomWidgetScreen> {
 //        }
 //        composable<GestureScreen> {
 //        }

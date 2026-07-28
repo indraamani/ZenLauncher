@@ -1,16 +1,9 @@
 package launcher.focux.ui.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,10 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -35,12 +25,7 @@ import kotlinx.coroutines.launch
 import launcher.focux.R
 import launcher.focux.datastore.userpreference.PreferenceRepo
 import launcher.focux.ui.component.Container
-import launcher.focux.ui.component.widget.BoxedClock
-import launcher.focux.ui.component.widget.Clock
-import launcher.focux.ui.component.widget.DateClockWidget
-import launcher.focux.ui.component.widget.DateWidget
-import launcher.focux.ui.component.widget.DayClockWidget
-import launcher.focux.ui.component.widget.DayWidget
+import launcher.focux.ui.component.widget.BottomDayWidget
 import launcher.focux.ui.component.widget.HourGrid
 import launcher.focux.ui.component.widget.MonthGrid
 import launcher.focux.ui.component.widget.YearGrid
@@ -50,7 +35,7 @@ import launcher.focux.viewmodel.SettingViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopWidgetScreen(
+fun BottomWidgetScreen(
     viewmodel: SettingViewmodel,
     closeScreen: () -> Unit
 ) {
@@ -95,81 +80,31 @@ fun TopWidgetScreen(
                 contentPadding = PaddingValues(horizontal = 20.dp)
             ) {
                 item {
-                    Container(onclick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.DEFAULT)
-                        }
-                    }) {
-                        Text(
-                            text = "No Widget",
-                            fontSize = 16.sp
-                        )
+                Container(onclick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        PreferenceRepo(ctx).changeBottomWidget(BottomWidgetEnum.DEFAULT)
                     }
+                }) {
+                    Text(
+                        text = "No Widget",
+                        fontSize = 16.sp
+                    )
                 }
+            }
                 item {
                     Container(onclick = {
                         coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.BOXED_CLOCK)
+                            PreferenceRepo(ctx).changeBottomWidget(BottomWidgetEnum.DAYWIDGET)
                         }
                     }) {
-                        BoxedClock(setting.font, setting.clockFormat)
-                    }
-                }
-
-                item {
-                    Container(onclick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.CLOCK)
-                        }
-                    }) {
-                        Clock(setting.font, setting.clockFormat)
+                        BottomDayWidget()
                     }
                 }
 
                 item {
                     Container(onclick = {
                         coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.DAY)
-                        }
-                    }) {
-                        DayWidget(setting.font)
-                    }
-                }
-
-                item {
-                    Container(onclick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.DATE)
-                        }
-                    }) {
-                        DateWidget(setting.font)
-                    }
-                }
-
-                item {
-                    Container(onclick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.DAYCLOCK)
-                        }
-                    }) {
-                        DayClockWidget(setting.font, setting.clockFormat)
-                    }
-                }
-
-                item {
-                    Container(onclick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.DATECLOCK)
-                        }
-                    }) {
-                        DateClockWidget(setting.font, setting.clockFormat)
-                    }
-                }
-
-                item {
-                    Container(onclick = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.HOURGRID)
+                            PreferenceRepo(ctx).changeBottomWidget(BottomWidgetEnum.HOURGRID)
                         }
                     }) {
                         HourGrid()
@@ -179,7 +114,7 @@ fun TopWidgetScreen(
                 item {
                     Container(onclick = {
                         coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.MONTHGRID)
+                            PreferenceRepo(ctx).changeBottomWidget(BottomWidgetEnum.MONTHGRID)
                         }
                     }) {
                         MonthGrid()
@@ -189,7 +124,7 @@ fun TopWidgetScreen(
                 item {
                     Container(onclick = {
                         coroutineScope.launch(Dispatchers.IO) {
-                            PreferenceRepo(ctx).changeTopWidget(TopWidgetEnum.YEARGRID)
+                            PreferenceRepo(ctx).changeBottomWidget(BottomWidgetEnum.YEARGRID)
                         }
                     }) {
                         YearGrid()

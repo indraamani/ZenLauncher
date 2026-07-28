@@ -6,7 +6,6 @@ import android.content.pm.LauncherApps
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.UserHandle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -27,7 +26,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,14 +46,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import launcher.focux.activity.DrawerActivity
 import launcher.focux.activity.SettingActivity
 import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.userpreference.PreferenceRepo
+import launcher.focux.ui.component.widget.BottomDayWidget
 import launcher.focux.ui.screen.HiddenScreen
 import launcher.focux.ui.theme.FocuxTheme
 import launcher.focux.ui.component.widget.BoxedClock
@@ -64,10 +60,12 @@ import launcher.focux.ui.component.widget.DateClockWidget
 import launcher.focux.ui.component.widget.DateWidget
 import launcher.focux.ui.component.widget.DayClockWidget
 import launcher.focux.ui.component.widget.DayWidget
+import launcher.focux.ui.component.widget.HourGrid
 import launcher.focux.ui.component.widget.MonthGrid
 import launcher.focux.ui.component.widget.YearGrid
+import launcher.focux.utils.BottomWidgetEnum
 import launcher.focux.utils.Packages
-import launcher.focux.utils.TopWidget.*
+import launcher.focux.utils.TopWidgetEnum.*
 import launcher.focux.utils.sort
 import launcher.focux.viewmodel.MainViewmodel
 
@@ -230,7 +228,7 @@ fun MainScreen(viewmodel: MainViewmodel) {
                 .visible(setting!!.showClock)
                 .padding(top = 126.dp)
         ) {
-            when(setting!!.topWidget) {
+            when(setting!!.topWidgetEnum) {
                 DEFAULT -> {
 
                 }
@@ -301,7 +299,23 @@ fun MainScreen(viewmodel: MainViewmodel) {
             modifier = Modifier
                 .padding(bottom = 40.dp)
         ) {
-            DayWidget()
+            when(setting!!.bottomWidget) {
+                BottomWidgetEnum.DEFAULT -> {
+
+                }
+                BottomWidgetEnum.DAYWIDGET -> {
+                    BottomDayWidget()
+                }
+                BottomWidgetEnum.YEARGRID -> {
+                    YearGrid()
+                }
+                BottomWidgetEnum.MONTHGRID -> {
+                    MonthGrid()
+                }
+                BottomWidgetEnum.HOURGRID -> {
+                    HourGrid()
+                }
+            }
         }
 
     }

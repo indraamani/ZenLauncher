@@ -46,7 +46,8 @@ import launcher.focux.viewmodel.SettingViewmodel
 fun SettingScreen(
     viewmodel: SettingViewmodel,
     openFontScreen: () -> Unit,
-    openTopwidgetScreen: () -> Unit
+    openTopwidgetScreen: () -> Unit,
+    openBottomwidgetScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -122,7 +123,9 @@ fun SettingScreen(
                 "Choose Bottom Widget",
                 painterResource(R.drawable.lucide_list_end),
                 font = settings.font,
-                onClick = { },
+                onClick = {
+                    openBottomwidgetScreen()
+                },
             )
             SettingButton(
                 "Show Status Bar",
