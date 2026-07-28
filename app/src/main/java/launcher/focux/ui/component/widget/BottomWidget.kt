@@ -69,7 +69,7 @@ fun unlockCount() {
 
 
 @Composable
-fun BottomDayWidget() {
+fun DayWidget() {
     val day = LocalDateTime.now().dayOfWeek.name
 
     Text(

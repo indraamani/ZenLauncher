@@ -1,10 +1,11 @@
 package launcher.focux.datastore.userpreference
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import launcher.focux.utils.BottomWidgetEnum
-import launcher.focux.utils.TopWidgetEnum
+import launcher.focux.utils.BottomWidget
+import launcher.focux.utils.TopWidget
 
 class PreferenceRepo(
     private val ctx: Context
@@ -43,13 +44,13 @@ class PreferenceRepo(
         }
     }
 
-    suspend fun changeTopWidget(widget: TopWidgetEnum) {
+    suspend fun changeTopWidget(widget: TopWidget) {
         ctx.preferenceDatastore.updateData { current ->
             current.copy(topWidget = widget)
         }
     }
 
-    suspend fun changeBottomWidget(widget: BottomWidgetEnum) {
+    suspend fun changeBottomWidget(widget: BottomWidget) {
         ctx.preferenceDatastore.updateData { current ->
             current.copy(bottomWidget = widget)
         }
