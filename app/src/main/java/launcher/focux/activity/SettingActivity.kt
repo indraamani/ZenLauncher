@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import launcher.focux.navigation.setting.SettingNavigation
-import launcher.focux.ui.theme.FocuxTheme
+import launcher.focux.ui.theme.ZenLauncherTheme
 import launcher.focux.viewmodel.SettingViewmodel
 
 class SettingActivity : ComponentActivity() {
@@ -17,7 +17,7 @@ class SettingActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FocuxTheme {
+            ZenLauncherTheme {
                 SettingNavigation(
                     viewModel
                 )
