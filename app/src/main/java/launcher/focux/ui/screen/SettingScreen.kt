@@ -48,7 +48,8 @@ fun SettingScreen(
     openFontScreen: () -> Unit,
     openTopwidgetScreen: () -> Unit,
     openBottomwidgetScreen: () -> Unit,
-    openPinnedAppScreen: () -> Unit
+    openPinnedAppScreen: () -> Unit,
+    openHiddenAppScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -228,7 +229,7 @@ fun SettingScreen(
                 painterResource(R.drawable.lucide_ban),
                 font = settings.font,
                 onClick = {
-
+                    openHiddenAppScreen()
                 }
             )
             Text(

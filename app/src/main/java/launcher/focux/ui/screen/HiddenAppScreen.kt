@@ -1,5 +1,6 @@
 package launcher.focux.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -28,24 +30,30 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import launcher.focux.R
+import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.pinnedapp.PinnedAppRepo
+import launcher.focux.utils.AppModel
 import launcher.focux.viewmodel.SettingViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PinnedAppScreen(
+fun HiddenAppScreen(
     viewmodel: SettingViewmodel,
     closeScreen: () -> Unit
 ) {
     val font = viewmodel.setting.collectAsStateWithLifecycle().value.font
     val ctx = LocalContext.current
     val coroutine = rememberCoroutineScope()
-    val apps = viewmodel.pinnedApps.collectAsStateWithLifecycle().value
+    val apps = viewmodel.packages.collectAsStateWithLifecycle().value.allPackages.values.flatten()
+        .filter {
+            it.isHidden
+        }
 
     Scaffold(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {},
@@ -80,14 +88,14 @@ fun PinnedAppScreen(
                     )
                 )
             )
-            if (apps.appList.isEmpty()) {
+            if (apps.isEmpty()) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "No Pinned Apps",
+                        text = "No Hidden Apps",
                         fontSize = 16.sp,
                         fontFamily = FontFamily(
                             Font(
@@ -99,7 +107,7 @@ fun PinnedAppScreen(
             } else {
                 LazyColumn {
                     items(
-                        apps.appList
+                        apps
                     ) {
                         Row(
                             modifier = Modifier
@@ -130,15 +138,23 @@ fun PinnedAppScreen(
                                         text = it.name,
                                         fontSize = 16.sp,
                                         fontFamily = FontFamily(
-                                            Font(font)
+                                            Font(
+                                                font
+                                            )
                                         )
                                     )
                                 }
                             }
                             FloatingActionButton(
                                 onClick = {
-                                    coroutine.launch() {
-                                        PinnedAppRepo(ctx).delete(it.name)
+                                    coroutine.launch(Dispatchers.IO) {
+                                        ApplicationRepo(ctx).unhide(
+                                            AppModel(
+                                                it.name,
+                                                it.packageName,
+                                                false
+                                            )
+                                        )
                                     }
                                 },
                                 modifier = Modifier

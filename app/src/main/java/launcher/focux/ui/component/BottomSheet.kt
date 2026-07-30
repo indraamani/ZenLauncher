@@ -34,6 +34,7 @@ import launcher.focux.R
 import launcher.focux.utils.AppModel
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.pinnedapp.PinnedApp
@@ -111,7 +112,12 @@ fun BottomSheet(sheetState: BottomSheetScaffoldState, viewmodel: DrawerViewmodel
         }
 
         Button(
-            onClick =  {},
+            onClick =  {
+                coroutineScope.launch(Dispatchers.IO) {
+                    ApplicationRepo(context).hide(AppModel(appModel.name, appModel.packageName, true))
+                    sheetState.bottomSheetState.partialExpand()
+                }
+            },
             shape = RoundedCornerShape(
                 16.dp
             ),
@@ -135,7 +141,7 @@ fun BottomSheet(sheetState: BottomSheetScaffoldState, viewmodel: DrawerViewmodel
 
         Button(
             onClick =  {
-                coroutineScope.launch {
+                coroutineScope.launch(Dispatchers.IO) {
                     PinnedAppRepo(context).add(
                         PinnedApp(
                             appModel.name,
