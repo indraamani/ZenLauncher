@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import launcher.focux.datastore.app.InstalledPackage
+import launcher.focux.datastore.app.applicationDatastore
 import launcher.focux.datastore.pinnedapp.PinnedApp
 import launcher.focux.datastore.pinnedapp.PinnedAppModel
 import launcher.focux.datastore.pinnedapp.pinnedAppModelDatastore
@@ -30,5 +32,11 @@ class SettingViewmodel(application : Application) : AndroidViewModel(application
         started = SharingStarted.Eagerly,
         initialValue = emptyList<PinnedApp>()
     ) as StateFlow<PinnedAppModel>
+
+    val packages = application.applicationDatastore.data.stateIn(
+        viewModelScope,
+        SharingStarted.Eagerly,
+        InstalledPackage()
+    )
 
 }

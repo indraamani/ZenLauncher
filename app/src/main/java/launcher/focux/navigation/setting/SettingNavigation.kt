@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import launcher.focux.ui.screen.BottomWidgetScreen
 import launcher.focux.ui.screen.FontScreen
+import launcher.focux.ui.screen.HiddenAppScreen
 import launcher.focux.ui.screen.PinnedAppScreen
 import launcher.focux.ui.screen.SettingScreen
 import launcher.focux.ui.screen.TopWidgetScreen
@@ -33,6 +34,9 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
                 },
                 openPinnedAppScreen = {
                     navController.navigate(PinnedAppScreen)
+                },
+                openHiddenAppScreen = {
+                    navController.navigate(HiddenAppScreen)
                 }
             )
         }
@@ -66,6 +70,15 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
 
         composable<PinnedAppScreen> {
             PinnedAppScreen(
+                viewmodel = viewmodel,
+                closeScreen = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable<HiddenAppScreen> {
+            HiddenAppScreen(
                 viewmodel = viewmodel,
                 closeScreen = {
                     navController.popBackStack()

@@ -22,3 +22,6 @@ data object GestureScreen
 
 @Serializable
 data object PinnedAppScreen
+
+@Serializable
+data object HiddenAppScreen

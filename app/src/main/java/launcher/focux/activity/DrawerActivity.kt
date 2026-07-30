@@ -38,6 +38,7 @@ import launcher.focux.ui.component.NestedLazyColumn
 import launcher.focux.ui.theme.FocuxTheme
 import launcher.focux.viewmodel.DrawerViewmodel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -82,7 +83,14 @@ fun DrawerScreen(ctx: Context, viewmodel: DrawerViewmodel) {
     }
     val font = viewmodel.setting.collectAsStateWithLifecycle().value.font
     val allPackage = viewmodel.packages.collectAsStateWithLifecycle().value.allPackages
-
+        .mapValues { (keys, values ) ->
+            values.filter { apps ->
+                !apps.isHidden
+            }
+        }
+        .filterValues {
+            it.isNotEmpty()
+        }
 
     BottomSheetScaffold(
         modifier = Modifier

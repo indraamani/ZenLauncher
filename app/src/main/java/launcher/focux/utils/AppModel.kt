@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AppModel(
     val name: String = "",
-    val packageName: String = ""
+    val packageName: String = "",
+    val isHidden: Boolean = false
 )
