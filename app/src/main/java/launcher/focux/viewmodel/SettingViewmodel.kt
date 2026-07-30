@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import launcher.focux.datastore.pinnedapp.PinnedApp
+import launcher.focux.datastore.pinnedapp.PinnedAppModel
+import launcher.focux.datastore.pinnedapp.pinnedAppModelDatastore
 import launcher.focux.datastore.userpreference.PreferenceModel
 import launcher.focux.datastore.userpreference.PreferenceRepo
 import launcher.focux.datastore.userpreference.preferenceDatastore
@@ -22,5 +25,10 @@ class SettingViewmodel(application : Application) : AndroidViewModel(application
 
     val font = application.preferenceDatastore.data
 
+    val pinnedApps : StateFlow<PinnedAppModel> = application.pinnedAppModelDatastore.data.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList<PinnedApp>()
+    ) as StateFlow<PinnedAppModel>
 
 }

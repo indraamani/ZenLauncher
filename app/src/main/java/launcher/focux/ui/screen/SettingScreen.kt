@@ -47,7 +47,8 @@ fun SettingScreen(
     viewmodel: SettingViewmodel,
     openFontScreen: () -> Unit,
     openTopwidgetScreen: () -> Unit,
-    openBottomwidgetScreen: () -> Unit
+    openBottomwidgetScreen: () -> Unit,
+    openPinnedAppScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -257,11 +258,11 @@ fun SettingScreen(
                 )
             )
             SettingButton(
-                "Modifed Pinned Apps",
+                "Modify Pinned Apps",
                 painterResource(R.drawable.lucide_grid),
                 font = settings.font,
                 onClick = {
-
+                    openPinnedAppScreen()
                 }
             )
 

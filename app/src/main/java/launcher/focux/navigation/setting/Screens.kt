@@ -19,3 +19,6 @@ data object BottomWidgetScreen
 
 @Serializable
 data object GestureScreen
+
+@Serializable
+data object PinnedAppScreen
