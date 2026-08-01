@@ -10,7 +10,7 @@ import java.time.LocalTime
 class LockedAppRepo(
     private val context: Context
 ) {
-    val lockedApps : Flow<List<LockedAppModel>> by context.lockedAppDatastore.data
+    val lockedApps : Flow<List<LockedApp>> = context.lockedAppDatastore.data
         .map { app -> app.appList }
 
     private fun hasTimePassed(initialTime: String, min: Long) : Boolean {
@@ -23,7 +23,10 @@ class LockedAppRepo(
 
     suspend fun add(lockedApp: LockedApp) {
         context.lockedAppDatastore.updateData { current ->
-            current.copy(appList = (current.appList + lockedApp))
+            val list = current.appList.filterNot {
+                it.packageName == lockedApp.packageName
+            }
+            current.copy(appList = (list + lockedApp))
         }
 
     }

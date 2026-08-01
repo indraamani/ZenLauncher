@@ -36,6 +36,13 @@ class DrawerViewmodel(application: Application) : AndroidViewModel(application) 
     private var _show = MutableStateFlow(false)
     var show = _show.asStateFlow()
 
+    private val _showTimer = MutableStateFlow(false)
+    val showTimer = _showTimer.asStateFlow()
+
+    fun toggleTimer() {
+        _showTimer.value = !_showTimer.value
+    }
+
     fun toggleShow() {
         _show.value = !_show.value
     }

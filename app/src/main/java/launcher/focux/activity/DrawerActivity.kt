@@ -47,6 +47,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import launcher.focux.ui.component.BottomSheet
+import launcher.focux.ui.component.popup.LockAppPopup
 import launcher.focux.ui.component.popup.RenamePopup
 
 class DrawerActivity : ComponentActivity() {
@@ -141,5 +142,6 @@ fun DrawerScreen(ctx: Context, viewmodel: DrawerViewmodel) {
             bottomSheet = bottomSheet
         )
         RenamePopup(viewmodel)
+        LockAppPopup(viewmodel)
     }
 }

@@ -1,6 +1,5 @@
 package launcher.focux.ui.component.popup
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,48 +8,45 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import launcher.focux.datastore.app.ApplicationRepo
-import launcher.focux.utils.AppModel
-import launcher.focux.utils.Packages
-import launcher.focux.utils.sort
+import launcher.focux.datastore.lockedapp.LockedApp
+import launcher.focux.datastore.lockedapp.LockedAppRepo
 import launcher.focux.viewmodel.DrawerViewmodel
+import java.time.LocalTime
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RenamePopup(viewmodel: DrawerViewmodel) {
+fun LockAppPopup(viewmodel: DrawerViewmodel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val selectedApp = viewmodel.selectedApp.collectAsState().value
-    var name by remember { mutableStateOf(selectedApp.name) }
+    var slider by remember { mutableIntStateOf(0) }
 
-    if (viewmodel.show.collectAsState().value) {
+    if (viewmodel.showTimer.collectAsState().value) {
         Dialog(onDismissRequest = {
-            viewmodel.toggleShow()
+            viewmodel.toggleTimer()
         }) {
             Card(
                 modifier = Modifier
@@ -65,23 +61,30 @@ fun RenamePopup(viewmodel: DrawerViewmodel) {
                         .padding(12.dp)
                 ) {
                     Text(
-                        text = "Rename App",
+                        text = "Set Timer",
                         fontSize = 20.sp
                     )
 
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name  = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        placeholder = {
-                            Text(
-                                text = "App name"
-                            )
-                        },
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Slider(
+                            value = slider.toFloat(),
+                            valueRange = 1f..24f,
+                            steps = 23,
+                            onValueChange = {
+                                slider = it.toInt()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(0.8f)
 
-                    )
+                        )
+                        Text(
+                            text = slider.toString()
+                        )
+                    }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -89,7 +92,7 @@ fun RenamePopup(viewmodel: DrawerViewmodel) {
                     ) {
                         OutlinedButton(
                             onClick = {
-                                viewmodel.toggleShow()
+                                viewmodel.toggleTimer()
                             },
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -100,24 +103,15 @@ fun RenamePopup(viewmodel: DrawerViewmodel) {
                         Button(
                             onClick = {
                                 coroutineScope.launch(Dispatchers.IO) {
-                                    val pkg = Packages(context).fetchAllPackages().toMutableList()
-                                    pkg.apply {
-                                        removeIf {
-                                            it.packageName == selectedApp.packageName
-                                        }
-                                        add(
-                                            AppModel(
-                                                name,
-                                                selectedApp.packageName
-                                            )
+                                    LockedAppRepo(context).add(
+                                        LockedApp(
+                                            selectedApp.packageName,
+                                            LocalTime.now().toString(),
+                                            slider.toLong()
                                         )
-                                    }
-                                    ApplicationRepo(context) .rename(selectedApp.name, AppModel(name, selectedApp.packageName))
-//                                        .update(
-//                                            pkg.sort()
-//                                        )
+                                    )
                                 }
-                                viewmodel.toggleShow()
+                                viewmodel.toggleTimer()
                             },
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier.padding(start = 12.dp)
@@ -131,4 +125,5 @@ fun RenamePopup(viewmodel: DrawerViewmodel) {
             }
         }
     }
+
 }
