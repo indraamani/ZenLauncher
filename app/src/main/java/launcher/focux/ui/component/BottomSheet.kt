@@ -89,7 +89,13 @@ fun BottomSheet(sheetState: BottomSheetScaffoldState, viewmodel: DrawerViewmodel
                 )
             }
             Button(
-                onClick =  {},
+                onClick =  {
+                    Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show()
+                    viewmodel.toggleTimer()
+                    coroutineScope.launch {
+                        sheetState.bottomSheetState.partialExpand()
+                    }
+                },
                 shape = RoundedCornerShape(
                     16.dp
                 ),
