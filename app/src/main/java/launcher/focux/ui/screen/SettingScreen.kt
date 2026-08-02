@@ -49,7 +49,8 @@ fun SettingScreen(
     openTopwidgetScreen: () -> Unit,
     openBottomwidgetScreen: () -> Unit,
     openPinnedAppScreen: () -> Unit,
-    openHiddenAppScreen: () -> Unit
+    openHiddenAppScreen: () -> Unit,
+    openLockedAppScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -253,7 +254,7 @@ fun SettingScreen(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-                text = "Pinned Apps Customization",
+                text = "Apps Customization",
                 fontFamily = FontFamily(
                     Font(settings.font)
                 )
@@ -264,6 +265,15 @@ fun SettingScreen(
                 font = settings.font,
                 onClick = {
                     openPinnedAppScreen()
+                }
+            )
+
+            SettingButton(
+                "Modify Locked Apps",
+                painterResource(R.drawable.lucide_grid),
+                font = settings.font,
+                onClick = {
+                    openLockedAppScreen()
                 }
             )
 

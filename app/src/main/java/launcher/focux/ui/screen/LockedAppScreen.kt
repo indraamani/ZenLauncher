@@ -1,6 +1,6 @@
 package launcher.focux.ui.screen
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -33,24 +32,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import launcher.focux.R
-import launcher.focux.datastore.app.ApplicationRepo
-import launcher.focux.datastore.pinnedapp.PinnedAppRepo
-import launcher.focux.utils.AppModel
+import launcher.focux.datastore.lockedapp.LockedAppRepo
+import launcher.focux.ui.component.popup.LockAppPopup
 import launcher.focux.viewmodel.SettingViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HiddenAppScreen(
+fun LockedAppScreen(
     viewmodel: SettingViewmodel,
     closeScreen: () -> Unit
 ) {
     val font = viewmodel.setting.collectAsStateWithLifecycle().value.font
     val ctx = LocalContext.current
     val coroutine = rememberCoroutineScope()
-    val apps = viewmodel.packages.collectAsStateWithLifecycle().value.allPackages.values.flatten()
-        .filter {
-            it.isHidden
-        }
+    val apps = viewmodel.lockedApps.collectAsStateWithLifecycle().value
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,7 +73,7 @@ fun HiddenAppScreen(
                 .padding(innerPadding)
         ) {
             Text(
-                text = "Hidden Apps",
+                text = "Locked Apps",
                 modifier = Modifier
                     .padding(horizontal = 12.dp, 30.dp),
                 fontSize = 28.sp,
@@ -95,7 +90,7 @@ fun HiddenAppScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "No Hidden Apps",
+                        text = "No Locked Apps",
                         fontSize = 16.sp,
                         fontFamily = FontFamily(
                             Font(
@@ -148,13 +143,7 @@ fun HiddenAppScreen(
                             FloatingActionButton(
                                 onClick = {
                                     coroutine.launch(Dispatchers.IO) {
-                                        ApplicationRepo(ctx).unhide(
-                                            AppModel(
-                                                it.name,
-                                                it.packageName,
-                                                false
-                                            )
-                                        )
+                                        LockedAppRepo(ctx).remove(it.packageName)
                                     }
                                 },
                                 modifier = Modifier

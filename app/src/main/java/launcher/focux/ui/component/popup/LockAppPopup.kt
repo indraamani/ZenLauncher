@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import launcher.focux.datastore.lockedapp.LockedApp
 import launcher.focux.datastore.lockedapp.LockedAppRepo
 import launcher.focux.viewmodel.DrawerViewmodel
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Composable
@@ -42,7 +43,7 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val selectedApp = viewmodel.selectedApp.collectAsState().value
-    var slider by remember { mutableIntStateOf(0) }
+    var slider by remember { mutableIntStateOf(1) }
 
     if (viewmodel.showTimer.collectAsState().value) {
         Dialog(onDismissRequest = {
@@ -105,9 +106,10 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
                                 coroutineScope.launch(Dispatchers.IO) {
                                     LockedAppRepo(context).add(
                                         LockedApp(
+                                            selectedApp.name,
                                             selectedApp.packageName,
-                                            LocalTime.now().toString(),
-                                            slider.toLong()
+                                            LocalDateTime.now().toString(),
+                                            slider.toLong()*60
                                         )
                                     )
                                 }
@@ -117,7 +119,7 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
                             modifier = Modifier.padding(start = 12.dp)
                         ) {
                             Text(
-                                text = "Change"
+                                text = "Add"
                             )
                         }
                     }

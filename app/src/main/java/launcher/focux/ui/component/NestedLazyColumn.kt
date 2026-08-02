@@ -1,6 +1,7 @@
 package launcher.focux.ui.component
 
 import android.app.Activity
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,8 +32,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import launcher.focux.datastore.lockedapp.LockedAppRepo
 import launcher.focux.utils.AppModel
 import launcher.focux.datastore.pinnedapp.PinnedApp
 import launcher.focux.datastore.pinnedapp.PinnedAppRepo
@@ -50,6 +56,7 @@ fun NestedLazyColumn(
     // remove
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val lockedApp = viewmodel.lockedApp.collectAsStateWithLifecycle().value
 
     LazyColumn(
         contentPadding = PaddingValues(bottom = 12.dp),
@@ -89,10 +96,37 @@ fun NestedLazyColumn(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                             onClick = {
-                                context.startActivity(
-                                    context.packageManager.getLaunchIntentForPackage(it.packageName)
-                                )
-                                (context as Activity).finish()
+                                coroutineScope.launch {
+                                    val app =
+                                        lockedApp.filter { app -> it.packageName == app.packageName }
+
+                                    if (app.isNotEmpty()) {
+                                        val isLocked = withContext(Dispatchers.IO) {
+                                            LockedAppRepo(context).hasTimePassed(it.packageName)
+                                        }
+                                        if (!isLocked) {
+                                            Toast.makeText(context, "App Locked", Toast.LENGTH_SHORT).show()
+                                            return@launch
+                                        } else {
+                                            withContext(Dispatchers.IO) {
+                                                LockedAppRepo(context).remove(it.packageName)
+                                            }
+                                            context.startActivity(
+                                                context.packageManager.getLaunchIntentForPackage(
+                                                    it.packageName
+                                                )
+                                            )
+                                            (context as Activity).finish()
+                                        }
+                                    } else {
+                                        context.startActivity(
+                                            context.packageManager.getLaunchIntentForPackage(
+                                                it.packageName
+                                            )
+                                        )
+                                        (context as Activity).finish()
+                                    }
+                                }
                             },
                             onLongClick = {
                                 coroutineScope.launch {

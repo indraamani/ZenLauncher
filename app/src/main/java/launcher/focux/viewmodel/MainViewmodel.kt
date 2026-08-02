@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import launcher.focux.datastore.lockedapp.LockedApp
+import launcher.focux.datastore.lockedapp.LockedAppModel
+import launcher.focux.datastore.lockedapp.LockedAppRepo
+import launcher.focux.datastore.lockedapp.lockedAppDatastore
 import launcher.focux.utils.AppModel
 import launcher.focux.datastore.pinnedapp.PinnedApp
 import launcher.focux.datastore.pinnedapp.PinnedAppRepo
@@ -37,5 +41,11 @@ class MainViewmodel(application: Application) : AndroidViewModel(application) {
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
         initialValue = PreferenceModel()
+    )
+
+    val lockedApp: StateFlow<List<LockedApp>> = LockedAppRepo(application).lockedApps.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = emptyList<LockedApp>()
     )
 }

@@ -1,9 +1,11 @@
 package launcher.focux.datastore.lockedapp
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 
@@ -14,10 +16,9 @@ class LockedAppRepo(
         .map { app -> app.appList }
 
     private fun hasTimePassed(initialTime: String, min: Long) : Boolean {
-        val initialTime = LocalTime.parse(initialTime)
-        initialTime.plusMinutes(min)
-        val currentTime = LocalTime.now()
-
+        val initialTime = LocalDateTime.parse(initialTime)
+            .plusMinutes(min)
+        val currentTime = LocalDateTime.now()
         return currentTime.isAfter(initialTime)
     }
 
@@ -42,8 +43,13 @@ class LockedAppRepo(
 
     suspend fun hasTimePassed(packageName: String) : Boolean{
         val list = context.lockedAppDatastore.data.first().appList
-        return list.any {
-            it.packageName == packageName && hasTimePassed(it.initialTime, it.lockedTime)
+        Log.d("Check", "hasTimePassed: ${list}")
+        val check = list.filter {
+            it.packageName == packageName
+        }.all {
+            hasTimePassed(it.initialTime, it.lockedTime)
         }
+        Log.d("Check", "hasTimePassed: ${check}")
+        return check
     }
 }

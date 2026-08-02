@@ -25,3 +25,6 @@ data object PinnedAppScreen
 
 @Serializable
 data object HiddenAppScreen
+
+@Serializable
+data object LockedAppScreen
