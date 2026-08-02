@@ -28,3 +28,6 @@ data object HiddenAppScreen
 
 @Serializable
 data object RenameAppScreen
+
+@Serializable
+data object LockedAppScreen

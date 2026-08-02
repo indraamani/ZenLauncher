@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import launcher.focux.ui.screen.BottomWidgetScreen
 import launcher.focux.ui.screen.FontScreen
 import launcher.focux.ui.screen.HiddenAppScreen
+import launcher.focux.ui.screen.LockedAppScreen
 import launcher.focux.ui.screen.PinnedAppScreen
 import launcher.focux.ui.screen.RenamedAppScreen
 import launcher.focux.ui.screen.SettingScreen
@@ -39,8 +40,13 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
                 openHiddenAppScreen = {
                     navController.navigate(HiddenAppScreen)
                 },
+<<<<<<< HEAD
                 openRenamedAppScreen = {
                     navController.navigate(RenameAppScreen)
+=======
+                openLockedAppScreen = {
+                    navController.navigate(LockedAppScreen)
+>>>>>>> feature/lock-apps
                 }
             )
         }
@@ -92,6 +98,15 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
 
         composable<RenameAppScreen> {
             RenamedAppScreen(
+                viewmodel = viewmodel,
+                closeScreen = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable<LockedAppScreen> {
+            LockedAppScreen(
                 viewmodel = viewmodel,
                 closeScreen = {
                     navController.popBackStack()

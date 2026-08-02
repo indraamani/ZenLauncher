@@ -1,11 +1,13 @@
 package launcher.focux
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.LauncherApps
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.UserHandle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
@@ -29,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,9 +50,11 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import launcher.focux.activity.DrawerActivity
 import launcher.focux.activity.SettingActivity
 import launcher.focux.datastore.app.ApplicationRepo
+import launcher.focux.datastore.lockedapp.LockedAppRepo
 import launcher.focux.datastore.userpreference.PreferenceRepo
 import launcher.focux.ui.component.widget.BottomDayWidget
 import launcher.focux.ui.screen.HiddenScreen
@@ -187,6 +192,8 @@ fun MainScreen(viewmodel: MainViewmodel) {
     var hasTriggered by remember { mutableStateOf(false) }
     val setting by viewmodel.setting.collectAsStateWithLifecycle()
     val font = setting!!.font
+    val coroutineScope = rememberCoroutineScope()
+    val lockedApp = viewmodel.lockedApp.collectAsStateWithLifecycle().value
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -286,9 +293,37 @@ fun MainScreen(viewmodel: MainViewmodel) {
                             interactionSource = null,
                             indication = null,
                             onClick = {
-                                context.startActivity(
-                                    context.packageManager.getLaunchIntentForPackage(it.packageName)
-                                )
+                                coroutineScope.launch {
+                                    val app =
+                                        lockedApp.filter { app -> it.packageName == app.packageName }
+
+                                    if (app.isNotEmpty()) {
+                                        val isLocked = withContext(Dispatchers.IO) {
+                                            LockedAppRepo(context).hasTimePassed(it.packageName)
+                                        }
+                                        if (!isLocked) {
+                                            Toast.makeText(context, "App Locked", Toast.LENGTH_SHORT).show()
+                                            return@launch
+                                        } else {
+                                            withContext(Dispatchers.IO) {
+                                                LockedAppRepo(context).remove(it.packageName)
+                                            }
+                                            context.startActivity(
+                                                context.packageManager.getLaunchIntentForPackage(
+                                                    it.packageName
+                                                )
+                                            )
+                                            (context as Activity).finish()
+                                        }
+                                    } else {
+                                        context.startActivity(
+                                            context.packageManager.getLaunchIntentForPackage(
+                                                it.packageName
+                                            )
+                                        )
+                                        (context as Activity).finish()
+                                    }
+                                }
                             }
                         ),
                 )

@@ -12,6 +12,10 @@ import kotlinx.coroutines.flow.stateIn
 import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.app.InstalledPackage
 import launcher.focux.datastore.app.applicationDatastore
+import launcher.focux.datastore.lockedapp.LockedApp
+import launcher.focux.datastore.lockedapp.LockedAppModel
+import launcher.focux.datastore.lockedapp.LockedAppRepo
+import launcher.focux.datastore.lockedapp.lockedAppDatastore
 import launcher.focux.datastore.userpreference.PreferenceRepo
 import launcher.focux.datastore.userpreference.PreferenceModel
 import launcher.focux.datastore.userpreference.preferenceDatastore
@@ -31,6 +35,11 @@ class DrawerViewmodel(application: Application) : AndroidViewModel(application) 
         initialValue = PreferenceModel()
     )
 
+    val lockedApp: StateFlow<List<LockedApp>> = LockedAppRepo(application).lockedApps.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = emptyList<LockedApp>()
+    )
     var selectedApp = MutableStateFlow<AppModel>(AppModel())
 
     private var _show = MutableStateFlow(false)
