@@ -1,5 +1,9 @@
 package launcher.focux.ui.screen
 
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,19 +34,27 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import launcher.focux.R
+import launcher.focux.datastore.app.ApplicationRepo
 import launcher.focux.datastore.pinnedapp.PinnedAppRepo
+import launcher.focux.utils.AppModel
 import launcher.focux.viewmodel.SettingViewmodel
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PinnedAppScreen(
+fun RenamedAppScreen(
     viewmodel: SettingViewmodel,
     closeScreen: () -> Unit
 ) {
     val font = viewmodel.setting.collectAsStateWithLifecycle().value.font
     val ctx = LocalContext.current
     val coroutine = rememberCoroutineScope()
-    val apps = viewmodel.pinnedApps.collectAsStateWithLifecycle().value
+    val apps = viewmodel.packages.collectAsStateWithLifecycle().value.allPackages.values.flatten()
+        .filter {
+            val appInfo = ctx.packageManager.getApplicationInfo(it.packageName, PackageManager.ApplicationInfoFlags.of(0))
+            val name = ctx.packageManager.getApplicationLabel(appInfo)
+            it.name != name
+        }
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -70,7 +82,7 @@ fun PinnedAppScreen(
                 .padding(innerPadding)
         ) {
             Text(
-                text = "Pinned App",
+                text = "Renamed App",
                 modifier = Modifier
                     .padding(horizontal = 12.dp, 30.dp),
                 fontSize = 28.sp,
@@ -80,14 +92,14 @@ fun PinnedAppScreen(
                     )
                 )
             )
-            if (apps.appList.isEmpty()) {
+            if (apps.isEmpty()) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "No Pinned Apps",
+                        text = "No Renamed Apps",
                         fontSize = 16.sp,
                         fontFamily = FontFamily(
                             Font(
@@ -99,7 +111,7 @@ fun PinnedAppScreen(
             } else {
                 LazyColumn {
                     items(
-                        apps.appList
+                        apps
                     ) {
                         Row(
                             modifier = Modifier
@@ -138,7 +150,17 @@ fun PinnedAppScreen(
                             FloatingActionButton(
                                 onClick = {
                                     coroutine.launch() {
-                                        PinnedAppRepo(ctx).delete(it.name)
+                                        val name = ctx.packageManager.getApplicationLabel(
+                                            ctx.packageManager.getApplicationInfo(it.packageName, PackageManager.GET_META_DATA)
+                                        )
+                                        ApplicationRepo(ctx).rename(
+                                            it.name,
+                                            AppModel(
+                                                name as String,
+                                                it.packageName,
+                                                it.isHidden
+                                            )
+                                        )
                                     }
                                 },
                                 modifier = Modifier

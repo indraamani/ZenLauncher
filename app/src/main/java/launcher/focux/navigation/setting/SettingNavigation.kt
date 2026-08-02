@@ -9,6 +9,7 @@ import launcher.focux.ui.screen.BottomWidgetScreen
 import launcher.focux.ui.screen.FontScreen
 import launcher.focux.ui.screen.HiddenAppScreen
 import launcher.focux.ui.screen.PinnedAppScreen
+import launcher.focux.ui.screen.RenamedAppScreen
 import launcher.focux.ui.screen.SettingScreen
 import launcher.focux.ui.screen.TopWidgetScreen
 import launcher.focux.viewmodel.SettingViewmodel
@@ -37,6 +38,9 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
                 },
                 openHiddenAppScreen = {
                     navController.navigate(HiddenAppScreen)
+                },
+                openRenamedAppScreen = {
+                    navController.navigate(RenameAppScreen)
                 }
             )
         }
@@ -79,6 +83,15 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
 
         composable<HiddenAppScreen> {
             HiddenAppScreen(
+                viewmodel = viewmodel,
+                closeScreen = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable<RenameAppScreen> {
+            RenamedAppScreen(
                 viewmodel = viewmodel,
                 closeScreen = {
                     navController.popBackStack()
