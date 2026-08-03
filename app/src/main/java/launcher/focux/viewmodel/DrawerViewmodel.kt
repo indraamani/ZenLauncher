@@ -15,6 +15,7 @@ import launcher.focux.datastore.lockedapp.LockedAppRepo
 import launcher.focux.datastore.userpreference.PreferenceModel
 import launcher.focux.datastore.userpreference.preferenceDatastore
 import launcher.focux.utils.AppModel
+import launcher.focux.utils.getRecentUsedApps
 
 class DrawerViewmodel(application: Application) : AndroidViewModel(application) {
 
@@ -35,6 +36,8 @@ class DrawerViewmodel(application: Application) : AndroidViewModel(application) 
         started = SharingStarted.Lazily,
         initialValue = emptyList<LockedApp>()
     )
+
+    val recentApps = getRecentUsedApps(application)
     var selectedApp = MutableStateFlow<AppModel>(AppModel())
 
     private var _searchText = MutableStateFlow<String>("")
