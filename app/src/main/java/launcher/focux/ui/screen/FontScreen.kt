@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import launcher.focux.R
 import launcher.focux.datastore.userpreference.PreferenceRepo
 import launcher.focux.datastore.userpreference.preferenceDatastore
+import launcher.focux.utils.FontResource
 import launcher.focux.utils.fetchAllFont
 import launcher.focux.viewmodel.SettingViewmodel
 
@@ -88,7 +89,7 @@ fun FontScreen(
             )
 
             LazyColumn(
-                contentPadding = PaddingValues(horizontal = 20.dp)
+                contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 20.dp)
             ) {
                 items(
                     items = allFont,

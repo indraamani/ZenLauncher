@@ -10,7 +10,7 @@ data class PreferenceModel(
     var showStatusBar: Boolean = true,
     val showClock: Boolean = true,
     val clockFormat: Boolean = false, /* false = 24 hours format, true = 12 hours format */
-    val font: Int = R.font.valorant,
+    val font: Int = R.font.comfortaa_bold,
     val isFreshInstall: Boolean = true,
     val topWidgetEnum: TopWidgetEnum = TopWidgetEnum.DEFAULT,
     val bottomWidget: BottomWidgetEnum = BottomWidgetEnum.DEFAULT,

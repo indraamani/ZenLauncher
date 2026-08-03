@@ -40,13 +40,11 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
                 openHiddenAppScreen = {
                     navController.navigate(HiddenAppScreen)
                 },
-<<<<<<< HEAD
                 openRenamedAppScreen = {
                     navController.navigate(RenameAppScreen)
-=======
+                },
                 openLockedAppScreen = {
                     navController.navigate(LockedAppScreen)
->>>>>>> feature/lock-apps
                 }
             )
         }

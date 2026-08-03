@@ -50,7 +50,7 @@ fun SettingScreen(
     openBottomwidgetScreen: () -> Unit,
     openPinnedAppScreen: () -> Unit,
     openHiddenAppScreen: () -> Unit,
-    openRenamedAppScreen: () -> Unit
+    openRenamedAppScreen: () -> Unit,
     openLockedAppScreen: () -> Unit
 ) {
     val context = LocalContext.current
