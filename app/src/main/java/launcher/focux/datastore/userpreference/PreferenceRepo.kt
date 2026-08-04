@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import launcher.focux.utils.BottomWidgetEnum
+import launcher.focux.utils.ThemeEnum
 import launcher.focux.utils.TopWidgetEnum
 
 class PreferenceRepo(
@@ -14,6 +15,12 @@ class PreferenceRepo(
         .catch { exception ->
             throw exception
         }
+
+    suspend fun changeTheme(theme: ThemeEnum) {
+        ctx.preferenceDatastore.updateData { current ->
+            current.copy(theme = theme)
+        }
+    }
 
     suspend fun toggleStatusBar(visibility: Boolean) {
         ctx.preferenceDatastore.updateData { current ->
