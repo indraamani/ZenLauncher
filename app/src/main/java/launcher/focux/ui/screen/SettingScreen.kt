@@ -45,6 +45,7 @@ import launcher.focux.viewmodel.SettingViewmodel
 @Composable
 fun SettingScreen(
     viewmodel: SettingViewmodel,
+    openThemeSelector: () -> Unit,
     openFontScreen: () -> Unit,
     openTopwidgetScreen: () -> Unit,
     openBottomwidgetScreen: () -> Unit,
@@ -105,6 +106,7 @@ fun SettingScreen(
                 painterResource(R.drawable.lucide_palette),
                 font = settings.font,
                 onClick = {
+                    openThemeSelector()
                 },
             )
             SettingButton(

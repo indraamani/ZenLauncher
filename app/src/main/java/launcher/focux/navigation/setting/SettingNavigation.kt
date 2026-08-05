@@ -12,6 +12,7 @@ import launcher.focux.ui.screen.LockedAppScreen
 import launcher.focux.ui.screen.PinnedAppScreen
 import launcher.focux.ui.screen.RenamedAppScreen
 import launcher.focux.ui.screen.SettingScreen
+import launcher.focux.ui.screen.ThemeScreen
 import launcher.focux.ui.screen.TopWidgetScreen
 import launcher.focux.viewmodel.SettingViewmodel
 
@@ -25,6 +26,9 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
         composable<Setting> {
             SettingScreen(
                 viewmodel = viewmodel,
+                openThemeSelector = {
+                    navController.navigate(ThemeScreen)
+                },
                 openFontScreen = {
                     navController.navigate(FontScreen)
                 },
@@ -112,8 +116,14 @@ fun SettingNavigation(viewmodel: SettingViewmodel){
             )
         }
 
-//        composable<ThemeScreen> {
-//        }
+        composable<ThemeScreen> {
+            ThemeScreen(
+                viewmodel = viewmodel,
+                closeScreen = {
+                    navController.popBackStack()
+                }
+            )
+        }
 //        composable<GestureScreen> {
 //        }
     }

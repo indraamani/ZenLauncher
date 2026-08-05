@@ -24,7 +24,7 @@ fun getRecentUsedApps(ctx: Context): List<AppModel> {
     if (usageStateList.isNotEmpty()) {
         usageStateList.sortedBy {
             it.lastTimeUsed
-        }.forEach {
+        }.reversed().forEach {
             val name = ctx.packageManager.getApplicationLabel(ctx.packageManager.getApplicationInfo(it.packageName,
                 PackageManager.ApplicationInfoFlags.of(0)))
             val launcherActivityInfo = ctx.packageManager.getLaunchIntentForPackage(it.packageName)
