@@ -18,9 +18,13 @@ Smart Launch turns your Android phone into a faster, cleaner, and more organized
 
 ## 📱 Screenshots
 
-|(Add Home Screen Image Here)|(Add Search Screen Image Here)|(Add Customization Image Here)|
-|:---:|:---:|:---:|
-| **Clean Home Screen** | **Instant App Search** | **Custom Themes** |
+<table>
+  <tr>
+    <td><img src="./images/image3.png" width="300"  alt="First Image"></td>
+    <td><img src="./images/image2.png" width="300"  alt="Second Image"></td>
+    <td><img src="./images/image1.png" width="300"  alt="Third Image"></td>
+  </tr>
+</table>
 
 ---
 
@@ -49,7 +53,7 @@ Yes, at any time. Just go to your phone’s <i>Settings → Apps → Default App
 
 ---
 
-## ❤️ Open Source & Community
+## Open Source & Community
 
 Smart Launch is 100% free and open-source. If you enjoy using the app:
 - ⭐️ **Star this project** on GitHub to support development!
