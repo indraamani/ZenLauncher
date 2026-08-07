@@ -33,7 +33,6 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_main"
             android:theme="@style/Theme.Focux">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

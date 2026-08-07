@@ -147,12 +147,19 @@ fun SettingScreen(
                 }
             )
             SettingButton(
-                "Enable Haptic Feedback",
+                "Show Wallpaper",
                 painterResource(R.drawable.lucide_blend),
                 font = settings.font,
                 isCheckable = true,
-                onCheckChange = { }
+                check = settings.showWallpaper,
+                onCheckChange = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        PreferenceRepo(context).toggleWallpaper(!settings.showWallpaper)
+                    }
+                    return@SettingButton null
+                }
             )
+
             Text(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -184,6 +191,7 @@ fun SettingScreen(
 
                 }
             )
+
             Text(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -219,11 +227,12 @@ fun SettingScreen(
                     return@SettingButton null
                 }
             )
+
             Text(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-                text = "Hidden Apps",
+                text = "App Customization",
                 fontFamily = FontFamily(
                     Font(settings.font)
                 )
@@ -236,14 +245,21 @@ fun SettingScreen(
                     openHiddenAppScreen()
                 }
             )
-            Text(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-                text = "Renamed Apps",
-                fontFamily = FontFamily(
-                    Font(settings.font)
-                )
+            SettingButton(
+                "Modify Pinned Apps",
+                painterResource(R.drawable.lucide_pin),
+                font = settings.font,
+                onClick = {
+                    openPinnedAppScreen()
+                }
+            )
+            SettingButton(
+                "Modify Locked Apps",
+                painterResource(R.drawable.lucide_lock),
+                font = settings.font,
+                onClick = {
+                    openLockedAppScreen()
+                }
             )
             SettingButton(
                 "Modify/View Renamed Apps",
@@ -251,32 +267,6 @@ fun SettingScreen(
                 font = settings.font,
                 onClick = {
                     openRenamedAppScreen()
-                }
-            )
-            Text(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-                text = "Apps Customization",
-                fontFamily = FontFamily(
-                    Font(settings.font)
-                )
-            )
-            SettingButton(
-                "Modify Pinned Apps",
-                painterResource(R.drawable.lucide_grid),
-                font = settings.font,
-                onClick = {
-                    openPinnedAppScreen()
-                }
-            )
-
-            SettingButton(
-                "Modify Locked Apps",
-                painterResource(R.drawable.lucide_grid),
-                font = settings.font,
-                onClick = {
-                    openLockedAppScreen()
                 }
             )
 
