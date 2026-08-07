@@ -4,4 +4,5 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_drawer">DrawerActivity</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>

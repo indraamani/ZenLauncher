@@ -1,10 +1,8 @@
 package launcher.focux.activity
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -26,7 +24,6 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,70 +33,45 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import launcher.focux.ui.component.BottomSheet
 import launcher.focux.ui.component.NestedLazyColumn
-import launcher.focux.ui.component.popup.LockAppPopup
-import launcher.focux.ui.component.popup.RenamePopup
-import launcher.focux.ui.screen.SearchScreen
+import launcher.focux.ui.dialog.LockAppPopup
+import launcher.focux.ui.dialog.RenamePopup
 import launcher.focux.ui.theme.FocuxTheme
 import launcher.focux.viewmodel.DrawerViewmodel
 
 class DrawerActivity : ComponentActivity() {
-    private val viewModel : DrawerViewmodel by viewModels()
+    private val viewModel :  DrawerViewmodel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             FocuxTheme {
-                DrawerScreen(this@DrawerActivity, viewModel)
-            }
-        }
-        val callback = object : OnBackPressedCallback(enabled = true) {
-            override fun handleOnBackPressed() {
-                viewModel.toggleTextFieldState(false)
-            }
-
-        }
-        this.onBackPressedDispatcher.addCallback(this, callback)
-
-        lifecycleScope.launch {
-            viewModel.textFieldState.collect {
-                viewModel.textFieldState.collect { isOpen ->
-                    callback.isEnabled = isOpen
-                }
+                DrawerScreen(
+                    viewModel
+                )
             }
         }
     }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerScreen(ctx: Context, viewmodel: DrawerViewmodel) {
+fun DrawerScreen(viewmodel : DrawerViewmodel) {
+    val context = LocalContext.current
     val bottomSheet = rememberBottomSheetScaffoldState()
-    val nestedScroll = remember {
-        object : NestedScrollConnection {
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
-                if (available.y > 100 && bottomSheet.bottomSheetState.currentValue != SheetValue.Expanded){
-                    (ctx as Activity).finish()
-                }
-                return super.onPostScroll(consumed, available, source)
-            }
-        }
-    }
+
+    //view model stuff
     val font = viewmodel.setting.collectAsStateWithLifecycle().value.font
-    val allPackage = viewmodel.packages.collectAsStateWithLifecycle().value.allPackages
-        .mapValues { (keys, values ) ->
+    val lockedApp = viewmodel.lockedApp.collectAsStateWithLifecycle().value
+    val packages = viewmodel.packages.collectAsStateWithLifecycle().value.allPackages
+        .mapValues { (keys, values) ->
             values.filter { apps ->
                 !apps.isHidden
             }
@@ -107,11 +79,18 @@ fun DrawerScreen(ctx: Context, viewmodel: DrawerViewmodel) {
         .filterValues {
             it.isNotEmpty()
         }
-    val state = viewmodel.textFieldState.collectAsStateWithLifecycle().value
-    val localfocusManager = LocalFocusManager.current
-    LaunchedEffect(viewmodel.textFieldState.collectAsStateWithLifecycle().value) {
-        if (!state) {
-            localfocusManager.clearFocus()
+    val nestedScroll = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                if (available.y > 100 && bottomSheet.bottomSheetState.currentValue != SheetValue.Expanded) {
+                    (context as Activity).finish()
+                }
+                return super.onPostScroll(consumed, available, source)
+            }
         }
     }
 
@@ -140,54 +119,50 @@ fun DrawerScreen(ctx: Context, viewmodel: DrawerViewmodel) {
                         .padding(top = 54.dp, bottom = 27.dp)
                         .onFocusChanged(
                             onFocusChanged = {
-                                viewmodel.toggleTextFieldState(it.hasFocus)
+
                             }
                         ),
-                        shape = RoundedCornerShape(
-                            54.dp
-                        )
+                    shape = RoundedCornerShape(
+                        54.dp
+                    )
                 )
             }
-        },
-        sheetDragHandle = {
-            Box(
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 10.dp)
-                    .height(4.dp)
-                    .width(40.dp)
-                    .clip(
-                        RoundedCornerShape(
-                            20.dp
-                        )
-                    )
-                    .background(Color.White)
-            )
         },
         sheetPeekHeight = 0.dp,
         sheetSwipeEnabled = true,
         scaffoldState = bottomSheet,
         sheetContainerColor = MaterialTheme.colorScheme.onPrimary,
         sheetContent = {
-            BottomSheet(bottomSheet, viewmodel)
+            BottomSheet(
+                sheetState = bottomSheet,
+                viewmodel = viewmodel
+            )
         },
         sheetShape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp
-        )
-    ) { innerPadding ->
-        if (state) {
-            SearchScreen(viewmodel)
-        } else {
-            NestedLazyColumn(
+        ),
+        sheetDragHandle = {
+            Box(
                 modifier = Modifier
-                    .padding(innerPadding),
-                viewmodel,
-                font = font,
-                apps = allPackage,
-                bottomSheet = bottomSheet
+                    .padding(top = 16.dp, bottom = 10.dp)
+                    .height(4.dp)
+                    .width(40.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color.White)
             )
-            RenamePopup(viewmodel)
-            LockAppPopup(viewmodel)
         }
+    ) { innerPadding ->
+        NestedLazyColumn(
+            modifier = Modifier
+                .padding(innerPadding),
+            viewmodel,
+            font = font,
+            apps = packages,
+            lockedApp = lockedApp,
+            bottomSheet = bottomSheet
+        )
+        RenamePopup(viewmodel)
+        LockAppPopup(viewmodel)
     }
 }

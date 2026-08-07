@@ -1,4 +1,4 @@
-package launcher.focux.ui.component.popup
+package launcher.focux.ui.dialog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,31 +12,30 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import launcher.focux.datastore.lockedapp.LockedApp
 import launcher.focux.datastore.lockedapp.LockedAppRepo
 import launcher.focux.viewmodel.DrawerViewmodel
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Composable
 fun LockAppPopup(viewmodel: DrawerViewmodel) {
@@ -46,12 +45,18 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
     var slider by remember { mutableIntStateOf(1) }
 
     if (viewmodel.showTimer.collectAsState().value) {
-        Dialog(onDismissRequest = {
-            viewmodel.toggleTimer()
-        }) {
+        Dialog(
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            ),
+            onDismissRequest = {
+                viewmodel.toggleShow()
+            }
+        ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
                     .height(200.dp),
                 colors = CardDefaults.cardColors()
             ) {
@@ -59,7 +64,7 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(12.dp)
+                        .padding(20.dp)
                 ) {
                     Text(
                         text = "Set Timer",
@@ -68,7 +73,9 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .padding(vertical = 20.dp)
                     ) {
                         Slider(
                             value = slider.toFloat(),
@@ -80,10 +87,13 @@ fun LockAppPopup(viewmodel: DrawerViewmodel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.8f)
+                                .padding(end = 10.dp)
 
                         )
                         Text(
-                            text = slider.toString()
+                            text = slider.toString(),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
                         )
                     }
 
