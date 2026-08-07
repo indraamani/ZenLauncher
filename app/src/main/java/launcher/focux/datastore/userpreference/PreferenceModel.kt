@@ -11,6 +11,7 @@ data class PreferenceModel(
     var showStatusBar: Boolean = true,
     val showClock: Boolean = true,
     val clockFormat: Boolean = false, /* false = 24 hours format, true = 12 hours format */
+    val showWallpaper: Boolean = true,
     val font: Int = R.font.comfortaa_bold,
     val isFreshInstall: Boolean = true,
     val theme: ThemeEnum = ThemeEnum.SunsetAmber,

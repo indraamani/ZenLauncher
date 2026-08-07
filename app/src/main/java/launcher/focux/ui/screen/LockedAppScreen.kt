@@ -1,6 +1,5 @@
 package launcher.focux.ui.screen
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import launcher.focux.R
 import launcher.focux.datastore.lockedapp.LockedAppRepo
-import launcher.focux.ui.component.popup.LockAppPopup
 import launcher.focux.viewmodel.SettingViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)

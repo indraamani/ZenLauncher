@@ -62,7 +62,12 @@ class PreferenceRepo(
         }
     }
 
-    // PreferenceRepo.kt
+    suspend fun toggleWallpaper(visibility: Boolean) {
+        ctx.preferenceDatastore.updateData { current ->
+            current.copy(showWallpaper = visibility)
+        }
+    }
+
     suspend fun checkAndSetFirstLaunch(): Boolean {
         var wasFirstTime = false
         ctx.preferenceDatastore.updateData { current ->

@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Focux</string>
+    <string name="app_name">ZenLauncher</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_drawer">DrawerActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>

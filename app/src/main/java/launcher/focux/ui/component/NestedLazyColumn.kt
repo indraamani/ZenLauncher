@@ -34,6 +34,7 @@ import launcher.focux.utils.AppModel
 import launcher.focux.viewmodel.DrawerViewmodel
 import java.util.Locale
 import androidx.compose.ui.platform.LocalLocale
+import launcher.focux.datastore.lockedapp.LockedApp
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -42,12 +43,12 @@ fun NestedLazyColumn(
     viewmodel: DrawerViewmodel,
     font: Int,
     apps: Map<String, List<AppModel>>,
+    lockedApp: List<LockedApp>,
     bottomSheet: BottomSheetScaffoldState
 ) {
-    // remove
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val lockedApp = viewmodel.lockedApp.collectAsStateWithLifecycle().value
 
     LazyColumn(
         contentPadding = PaddingValues(bottom = 12.dp),
